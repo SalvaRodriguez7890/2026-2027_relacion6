@@ -70,12 +70,12 @@ function inicioCuerpo(string $cabecera, array $ubicacion = [])
             </div>
              <nav id="navegacion">
                
-                    <a href="/aplicacion/pruebas/index.php">Pruebas</a>
-                    <a href="/aplicacion/relacion1/ejercicios.php">Relacion 1</a>
-                    <a href="/aplicacion/relacion2/ejercicios.php">Relacion 2</a>
-                    <a href="/aplicacion/relacion3/ejercicios.php">Relacion 3</a>
-                    <a href="/aplicacion/relacion4/ejercicios.php">Relacion 4</a>
-                    <a href="/aplicacion/relacion5/ejercicios.php">Relacion 5</a>
+                    <a href="index.php">RECARGAR-PAGINA</a>
+                    <a href="">Relacion 1</a>
+                    <a href="">Relacion 2</a>
+                    <a href="">Relacion 3</a>
+                    <a href="">Relacion 4</a>
+                    <a href="">Relacion 5</a>
                 
             </nav>
             <header>

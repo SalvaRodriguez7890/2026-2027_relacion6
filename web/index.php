@@ -45,9 +45,8 @@ function cuerpo()
 ?>
             <br>
                 <lu>
-                    <h3>ENLACES</h3>
                     <hr>
-                    <li><a href="/aplicacion/pruebas/index.php">Acceso a Pruebas</a></li>
+                    <li><a href="./index.php">RECARGA-PAGINA</a></li>
                     <br>
                 </lu>
 
