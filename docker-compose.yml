@@ -1,0 +1,16 @@
+services:
+  php:
+    image: vicentett1/php-xdebug:1.0
+    volumes:
+      - type: bind
+        source: ./web
+        target: /var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - 8086:80
+    environment:
+      XDEBUG_CONFIG: "main_defaults"
+      XDEBUG_MODE: "debug"
+      XDEBUG_SESSION: "1"
+  
