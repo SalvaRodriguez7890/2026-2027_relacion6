@@ -26,9 +26,9 @@ abstract class MuebleBase {
         throw new Exception("El nombre del mueble no es válido.");
         }    
         //Inicializo el fabricante 
-        if (!$this->setFabricante($fabricante)) {
-        $this->setFabricante("FaMu:");
-    }
+        
+        $this->setFabricante($fabricante);
+        
     
 
 
