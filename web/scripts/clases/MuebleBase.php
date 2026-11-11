@@ -15,7 +15,7 @@ abstract class MuebleBase {
     private string $_fechaFinVenta = "31/12/2040";
     private float $_precio = 30;
 
-    /**
+    /** 
      * Constructor 
      */
     public function __construct(string $nombre, string $fabricante = "FaMu:", string $pais = "ESPAÑA", 
