@@ -25,13 +25,16 @@ abstract class MuebleBase {
         if (!$this->setNombre($nombre)) {
         throw new Exception("El nombre del mueble no es válido.");
         }    
+
         //Inicializo el fabricante 
-        
         $this->setFabricante($fabricante);
+
+        //se inicializa el pais
+        $this->setPais($pais);
         
-    
-
-
+        //se inicializa el año
+        $this->setAnio($anio);
+     
     }
 
 
@@ -116,5 +119,44 @@ abstract class MuebleBase {
         return true;
         }
 
+    /**
+     * Pais (cadena, máximo 20 caracteres, por defecto ‘ESPAÑA’)
+     *
+     * @param string $pais
+     * @return boolean
+     */
+    public function setPais(string $pais): bool {
+        //Le quito espacios vacios por si acaso       
+        $pa = trim($pais);
+
+        //Compruebo que no valga mas de 20 caracteres
+        if(!(VALFINAL\validaCadena($pa,20,""))){
+        // Si la validacion devuelve false entonces mide mas de 20, le meto por defecto ESPAÑA
+        $this->_pais = "ESPAÑA";
+        }else{
+         $this->_pais = $pa;
+        }
+        return true;
+        }
+
+    public function setAnio(int $an): bool {
+        //genero el año actual
+        $anioActual = (int)date('Y');
+
+        //Valido el año entre 2020 y el año actual por defecto le meto 2020
+        if(!(VALFINAL\validaEntero($an,2020,$anioActual,2020))){
+        // Si la validacion devuelve false el anio no cumplia el rango, por lo que ahora $anio valdrá 2020 (por defecto)
+        $this->_anio = $an;
+        }else{
+        //si la validacion es correcta y el año que se le pasa esta entre 2020 y el año actual $anio vale lo mismo que se le paso
+        // por lo que se le asigna a nuestra variable
+         $this->_anio = $an;
+        }
+        return true;
+        }
+
+
+
+ 
 
 }
