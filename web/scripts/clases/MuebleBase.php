@@ -55,7 +55,8 @@ abstract class MuebleBase {
             $this->setPrecio(30.00);
         }
 
-     
+        //si todo va bien y el constructor crea el mueble sumo 1
+        $this->_mueblesCreados +=1;
     }
 
 
