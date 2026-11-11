@@ -50,6 +50,11 @@ abstract class MuebleBase {
             $this->setFechaFinVenta("31/12/2040");
         }
 
+        //Inicializo el precio que tiene que ser real y minimo 30
+        if(!$this->setPrecio($precio)){
+            $this->setPrecio(30.00);
+        }
+
      
     }
 
@@ -204,12 +209,7 @@ abstract class MuebleBase {
         return true;
     }
 
-    /**
-     * FechaFinVenta (cadena-fecha, fecha en la que dejará de venderse, no puede ser anterior a la FechaIniVenta, por defecto 31/12/2040’)
-     *
-     * @param string $fechaFinVenta
-     * @return boolean
-     */
+    
     /**
      * FechaFinVenta (cadena-fecha, fecha en la que dejará de venderse, no puede ser anterior a la FechaIniVenta)
      *
@@ -236,6 +236,23 @@ abstract class MuebleBase {
 
         //Si todo va bien inicializo la fecha y devuelvo true
         $this->_fechaFinVenta = $tempFecha;
+        return true;
+    }
+
+    /**
+     *Precio (real, por defecto 30, no puede ser menor de 30). 
+     *
+     * @param float $precio
+     * @return boolean
+     */
+    public function setPrecio(float $precio): bool {
+    
+        // Valido el precio que sea real
+        if (!VALFINAL\validaReal($precio, 30.0, 1000000.0, 30.0)) {
+            return false; // si es menor de 30 false
+        }
+        //si la validacion devuelve true esta correcto
+        $this->_precio = (float) $precio;
         return true;
     }
 
