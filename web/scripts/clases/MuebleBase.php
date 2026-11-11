@@ -26,14 +26,26 @@ abstract class MuebleBase {
         throw new Exception("El nombre del mueble no es válido.");
         }    
 
-        //Inicializo el fabricante 
-        $this->setFabricante($fabricante);
+        //Fabricante (Si el set devuelve false, aplicamos el valor por defecto)
+        if (!$this->setFabricante($fabricante)) {
+            $this->setFabricante("FaMu:");
+        }
 
-        //se inicializa el pais
-        $this->setPais($pais);
+        //País (Si el set devuelve false, aplicamos el valor por defecto)
+        if (!$this->setPais($pais)) {
+            $this->setPais("ESPAÑA");
+        }
         
-        //se inicializa el año
-        $this->setAnio($anio);
+        //Año (Si el set devuelve false, aplicamos el valor por defecto 2020)
+        if (!$this->setAnio($anio)) {
+            $this->setAnio(2020);
+        }
+
+        //Incio la fecha de ini venta (si no se cunmple 01/01/2020)
+        if(!$this->setFechaIniVenta($fechaIniVenta)){
+            $this->setFechaIniVenta("01/01/2020");
+        }
+
      
     }
 
@@ -114,8 +126,6 @@ abstract class MuebleBase {
         }else{
          $this->_fabricante = $fab;
         }
-
-
         return true;
         }
 
@@ -126,37 +136,70 @@ abstract class MuebleBase {
      * @return boolean
      */
     public function setPais(string $pais): bool {
-        //Le quito espacios vacios por si acaso       
         $pa = trim($pais);
 
-        //Compruebo que no valga mas de 20 caracteres
-        if(!(VALFINAL\validaCadena($pa,20,""))){
-        // Si la validacion devuelve false entonces mide mas de 20, le meto por defecto ESPAÑA
-        $this->_pais = "ESPAÑA";
-        }else{
-         $this->_pais = $pa;
-        }
-        return true;
+        // Compruebo que no valga más de 20 caracteres
+        if (!VALFINAL\validaCadena($pa, 20, "")) {
+            return false; //No cumple la validación
         }
 
+        $this->_pais = $pa;
+        return true;
+    }
+
+    /**
+     * Anio (entero, año de inicio de fabricación, valor entre 2020 y el año actual, por defecto 2020),
+     *
+     * @param integer $an
+     * @return boolean
+     */
     public function setAnio(int $an): bool {
-        //genero el año actual
-        $anioActual = (int)date('Y');
+        //saco el año actual
+        $anioActual = (int) date('Y');
 
-        //Valido el año entre 2020 y el año actual por defecto le meto 2020
-        if(!(VALFINAL\validaEntero($an,2020,$anioActual,2020))){
-        // Si la validacion devuelve false el anio no cumplia el rango, por lo que ahora $anio valdrá 2020 (por defecto)
+        // Valida el año entre 2020 y el año actual, le meto 2020 por defecto (porque la funcion de validar lo requiere)
+        if (!VALFINAL\validaEntero($an, 2020, $anioActual, 2020)) {
+            return false; // Fuera de rango devuelvo false
+        }
+        //si la validacion devuelve true esta correcto
         $this->_anio = $an;
-        }else{
-        //si la validacion es correcta y el año que se le pasa esta entre 2020 y el año actual $anio vale lo mismo que se le paso
-        // por lo que se le asigna a nuestra variable
-         $this->_anio = $an;
-        }
         return true;
+    }
+
+    /**
+     * Undocumented FechaIniVenta (cadena, fecha en la que se empieza a vender el mueble, no puede ser anterior al uno 
+     * de enero del Anio de inicio de fabricación, en caso de fallo se asigna “01/01/anio”, por defecto ‘01/01/2020’ aunque se usará lo anterior)
+     *
+     * @param string $fechaIniVenta
+     * @return boolean
+     */
+    public function setFechaIniVenta(string $fechaIniVenta): bool {
+        //quito los espacios a la fecha
+        $tempFecha = trim($fechaIniVenta);
+
+        //Valido que la fecha metida este en fomrato correcto
+        // Si no es válida, la función cambiará $tempFecha a "" y devolverá false.
+        if (!VALFINAL\validaFecha($tempFecha, "")) {
+            return false; //directamete false
         }
 
+        //COjo el año de fabricacion, si por lo que sea es null uso el operador ?? y le meto 2020
+        $anioMinimo = $this->_anio ?? 2020;
+        
+        //Creo dos fechas con DateTime, una la fecha mínima y la otra la que hemos validado e ingresado
+        $fechaMinima = DateTime::createFromFormat('d/m/Y', "01/01/{$anioMinimo}");
+        $fechaIngresada = DateTime::createFromFormat('d/m/Y', $tempFecha);
 
+        //Compreubo que la fecha ingresada sea menor que la minima, osea que la fecha mínima sea mas antigua
+        if ($fechaIngresada < $fechaMinima) {
+            return false; //Si la fecha ingresada es mas antigua ppues no  se cumple y devuelvo false
+        }
 
- 
+        //Si pasa todo es que está correcto, pues devuelvo true e inicializo la fecha.
+        $this->_fechaIniVenta = $tempFecha;
+        return true;
+    }
+
+    
 
 }
