@@ -45,6 +45,10 @@ abstract class MuebleBase {
         if(!$this->setFechaIniVenta($fechaIniVenta)){
             $this->setFechaIniVenta("01/01/2020");
         }
+        //Incio la fechaFinVenta venta (si no se cunmple 31/12/2040)
+        if(!$this->setFechaFinVenta($fechaFinVenta)){
+            $this->setFechaFinVenta("31/12/2040");
+        }
 
      
     }
@@ -200,6 +204,41 @@ abstract class MuebleBase {
         return true;
     }
 
-    
+    /**
+     * FechaFinVenta (cadena-fecha, fecha en la que dejará de venderse, no puede ser anterior a la FechaIniVenta, por defecto 31/12/2040’)
+     *
+     * @param string $fechaFinVenta
+     * @return boolean
+     */
+    /**
+     * FechaFinVenta (cadena-fecha, fecha en la que dejará de venderse, no puede ser anterior a la FechaIniVenta)
+     *
+     * @param string $fechaFinVenta
+     * @return boolean
+     */
+    public function setFechaFinVenta(string $fechaFinVenta): bool {
+        // Quito los espacios a la fecha
+        $tempFecha = trim($fechaFinVenta);
+
+        // Valido que la fecha metida esté en formato correcto (si no, devuelve false y asigna "")
+        if (!VALFINAL\validaFecha($tempFecha, "")) {
+            return false; 
+        }
+        
+        // Creo dos fechas con DateTime: inicio de venta y la ingresada
+        $fechaInVenta = DateTime::createFromFormat('d/m/Y', $this->_fechaIniVenta);
+        $fechaIngresada = DateTime::createFromFormat('d/m/Y', $tempFecha);
+
+        // Compruebo que la fecha ingresada NO sea anterior a la de inicio de venta
+        if ($fechaIngresada < $fechaInVenta) {
+            return false; // Si es más antigua que la de inicio, no es válida
+        }
+
+        //Si todo va bien inicializo la fecha y devuelvo true
+        $this->_fechaFinVenta = $tempFecha;
+        return true;
+    }
+
+
 
 }
