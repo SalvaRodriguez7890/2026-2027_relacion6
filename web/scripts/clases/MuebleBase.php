@@ -108,14 +108,15 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      * @return boolean
      */
     public function setNombre(string $nombre): bool {
-        $validoNombre = VALFINAL\validaCadena($nombre,40,"");
+
+
 
         //tras pasarle la validacion devolverá false si no cumple, osea mas de 40
-        if(!$validoNombre){
+        if(!VALFINAL\validaCadena($nombre,40,"")){
             return false;
         }
         //Lo paso a mayuscula
-        $nombreMayus = mb_strtoupper($validoNombre);
+        $nombreMayus = mb_strtoupper($nombre);
 
         //se lo asigno a nuestra propiedad nombre
         $this->_nombre = $nombreMayus;
@@ -303,10 +304,9 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      *
      * @return string
      */
-    public static function toString(MuebleBase $mueble): string{
-
-        return "MUEBLE de " . get_class($mueble) . " con nombre " . $mueble->getNombre() . ", fabricante " . $mueble->getFabricante() . ", fabricado en " . $mueble->getPais() . 
-                ", a partir del año " . $mueble->getAnio() . " vendido desde " . $mueble->getFechaIniVenta() . " hasta " . $mueble->getFechaFinVenta() . ", precio " . number_format($mueble->getPrecio(),2,'.','') . "€";
+    public function toString(): string {
+        return "MUEBLE de " . get_class($this) . " con nombre " . $this->getNombre() . ", fabricante " . $this->getFabricante() . ", fabricado en " . $this->getPais() . 
+                ", a partir del año " . $this->getAnio() . " vendido desde " . $this->getFechaIniVenta() . " hasta " . $this->getFechaFinVenta() . ", precio " . number_format($this->getPrecio(), 2, '.', '') . "€";
     }
 
 }

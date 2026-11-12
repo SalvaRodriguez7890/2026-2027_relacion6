@@ -57,4 +57,15 @@ final class MuebleReciclado extends MuebleBase{
      return ['_porcentajeReciclado'];
     }
 
+  /**
+   * To Strig reescrito usando la clase padre y sumandole la propiedad porcentajeReciclado
+   *
+   * @return string
+   */
+    #[Override]
+  public function toString(): string
+  {
+    return parent::toString() . ", material reciclado usado " . $this->getPorcentajeReciclado() . "%";
+  }
+
 }

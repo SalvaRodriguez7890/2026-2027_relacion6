@@ -37,8 +37,14 @@ function cabecera()
 function cuerpo()
 {
 ?>
-<!--Pruebas de muebles-->    
+<!--Pruebas de muebles-->  
+
+<br>
+<hr>
+<br>
+
 <?php
+
 
 // $mueble1 = new MuebleBase("Mueble 1 Ejemplo","Pedro","Españaaaaaaaaaaaaaaaaaaaaaaaaaaaa",2021,"fechaMal","fechamal2", 12.32);
 
@@ -46,6 +52,29 @@ function cuerpo()
 
 // echo $cadena;
 
+    $muebleReciclado1 = new MuebleReciclado("Silla de plástico", "No tiene", "China", 2023, 04/3/2023, 1/1/2032, 31, 70);
 
+    echo $muebleReciclado1->toString().PHP_EOL;
+
+    echo "<br><br>".PHP_EOL;
+   
+    foreach($muebleReciclado1->damePropiedadesAdicionales() as $propiedad){
+
+    echo $propiedad."<br>".PHP_EOL;
+
+    }
+    echo "<br><hr><br>".PHP_EOL;
+
+    $muebleTradicional = new MuebleTradicional("Silla de madera Rústica", "Pedro el Carpintero" , "", 2021, 04/3/2022, 1/1/2042, 150, 16, "SERIE 5");
+
+    echo $muebleTradicional->toString().PHP_EOL;
+
+    echo "<br><br>".PHP_EOL;
+   
+    foreach($muebleTradicional->damePropiedadesAdicionales() as $propiedad){
+
+    echo $propiedad."<br>".PHP_EOL;
+
+    }
 
 }

@@ -90,4 +90,15 @@ final class MuebleTradicional extends MuebleBase{
       return ['_peso','_serie'];
   }
 
+  /**
+   * To Strig reescrito usando la clase padre y suamndole las dos nuevas propiedades
+   *
+   * @return string
+   */
+    #[Override]
+  public function toString(): string
+  {
+    return parent::toString() . ", en la serie " . $this->getserie() . ", con un peso de " . $this->getPeso() . "kg";
+  }
+
 }
