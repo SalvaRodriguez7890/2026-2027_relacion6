@@ -1,10 +1,10 @@
 
 <?php
 include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
-abstract class MuebleBase {
+ abstract class MuebleBase {
     //variables
     private const MAXIMO_MUEBLES = 0;
-    private int $_mueblesCreados = 0;
+    private static int $_mueblesCreados = 0;
 
     //propiedades
     private string $_nombre;
@@ -52,14 +52,24 @@ abstract class MuebleBase {
 
         //Inicializo el precio que tiene que ser real y minimo 30
         if(!$this->setPrecio($precio)){
-            $this->setPrecio(30.00);
+            $this->setPrecio(30);
         }
 
         //si todo va bien y el constructor crea el mueble sumo 1
-        $this->_mueblesCreados +=1;
+        self::$_mueblesCreados +=1;
     }
 
 
+    //====== MÉTODOS MÁGICOS EVITANDO LA SOBREACARGA ======
+
+    
+    public function __set($name, $value) {
+        throw new Exception("No se permite la creación dinámica de la propiedad '{$name}'.");
+    }
+
+    public function __get($name) {
+        throw new Exception("La propiedad '{$name}' no existe o no es accesible.");
+    }
 
     // ================= GETTERS y SETTERS =================
 
@@ -249,14 +259,54 @@ abstract class MuebleBase {
     public function setPrecio(float $precio): bool {
     
         // Valido el precio que sea real
-        if (!VALFINAL\validaReal($precio, 30.0, 1000000.0, 30.0)) {
+        if (!VALFINAL\validaReal($precio, 30.00, 1000000000.00, 30.00)) {
             return false; // si es menor de 30 false
         }
         //si la validacion devuelve true esta correcto
-        $this->_precio = (float) $precio;
+        $this->_precio =$precio;
         return true;
     }
 
+    /**
+     * Método damePropiedadesAdicionales. Será redefinido en las clases hijas y devolverá
+     * un array con el nombre de las propiedades adicionales a la clase base
+     *
+     * @return array
+     */
+    abstract function damePropiedadesAdicionales(): array;
+    
+    
+    /**
+     * Método de clase puedeCrear que devuelve true si se pueden crear más instancias de la
+     * clase y false en caso contrario. Además, devuelve en el parámetro Número el número de
+     * muebles que aún se pueden crear de la clase.
+     *
+     * @param [int] $numRestantes
+     * @return boolean
+     */
+    public static function puedeCrear(int &$numRestantes): bool {
+    //En el if pregunto si los muebles creados son iguales o mas, si se cumpleentonces quiere que decir que ya no se pueden crear mas
+    //le asigno a la numRestantes 0 y devuelvo false
+    if (self::$_mueblesCreados >= self::MAXIMO_MUEBLES) {
+        $numRestantes = 0;
+        return false;
+    } else {
+        //si no significa que todavia hay "espacio" para crear mas, y a la variable numRestantes le asigno la resta del maximo menos los muebles creados
+        $numRestantes = self::MAXIMO_MUEBLES - self::$_mueblesCreados;
+        return true; }
+    }
 
+    /**
+     * Método que al convertir la instancia en cadena nos devuelve 'MUEBLE de clase
+     * XXX con nombre XXX, fabricante XXX, fabricado en XXX a partir del año 999,
+     * vendido desde 99/99/9999 hasta 99/99/9999, precio 9999'.
+     *
+     * @return string
+     */
+    public static function toString(MuebleBase $mueble): string{
+
+        return "MUEBLE de " . get_class($mueble) . " con nombre " . $mueble->getNombre() . ", fabricante " . $mueble->getFabricante() . ", fabricado en " . $mueble->getPais() . 
+                ", a partir del año " . $mueble->getAnio() . " vendido desde " . $mueble->getFechaIniVenta() . " hasta " . $mueble->getFechaFinVenta() . ", precio " . number_format($mueble->getPrecio(),2,'.','') . "€";
+    }
 
 }
