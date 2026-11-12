@@ -1,7 +1,7 @@
 
 <?php
 include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
-abstract class MuebleBase {
+ abstract class MuebleBase {
     //variables
     private const MAXIMO_MUEBLES = 0;
     private static int $_mueblesCreados = 0;
@@ -52,14 +52,24 @@ abstract class MuebleBase {
 
         //Inicializo el precio que tiene que ser real y minimo 30
         if(!$this->setPrecio($precio)){
-            $this->setPrecio(30.00);
+            $this->setPrecio(30);
         }
 
         //si todo va bien y el constructor crea el mueble sumo 1
-        $this->_mueblesCreados +=1;
+        self::$_mueblesCreados +=1;
     }
 
 
+    //====== MÉTODOS MÁGICOS EVITANDO LA SOBREACARGA ======
+
+    
+    public function __set($name, $value) {
+        throw new Exception("No se permite la creación dinámica de la propiedad '{$name}'.");
+    }
+
+    public function __get($name) {
+        throw new Exception("La propiedad '{$name}' no existe o no es accesible.");
+    }
 
     // ================= GETTERS y SETTERS =================
 
@@ -249,11 +259,11 @@ abstract class MuebleBase {
     public function setPrecio(float $precio): bool {
     
         // Valido el precio que sea real
-        if (!VALFINAL\validaReal($precio, 30.0, 1000000.0, 30.0)) {
+        if (!VALFINAL\validaReal($precio, 30.00, 1000000000.00, 30.00)) {
             return false; // si es menor de 30 false
         }
         //si la validacion devuelve true esta correcto
-        $this->_precio = (float) $precio;
+        $this->_precio =$precio;
         return true;
     }
 
@@ -296,7 +306,7 @@ abstract class MuebleBase {
     public static function toString(MuebleBase $mueble): string{
 
         return "MUEBLE de " . get_class($mueble) . " con nombre " . $mueble->getNombre() . ", fabricante " . $mueble->getFabricante() . ", fabricado en " . $mueble->getPais() . 
-                "";
+                ", a partir del año " . $mueble->getAnio() . " vendido desde " . $mueble->getFechaIniVenta() . " hasta " . $mueble->getFechaFinVenta() . ", precio " . number_format($mueble->getPrecio(),2,'.','') . "€";
     }
 
 }
