@@ -92,9 +92,8 @@ function cuerpo()
 
     $muebleReciclado1->anadirCaracteristicas("Otra", 1);
 
-   
-
     echo "<br><br>".PHP_EOL;
+   
     }catch(Exception $e){
         echo  $e->getMessage() . PHP_EOL;
     }
