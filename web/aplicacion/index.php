@@ -77,4 +77,26 @@ function cuerpo()
 
     }
 
+    $muebleReciclado1->anadirCaracteristicas("Material Respaldo", "ROBLE", "DescuentoDiscapacidad", 5);
+
+    echo $muebleReciclado1->getCaracteristicas();
+
+    echo "<br><br>".PHP_EOL;
+    try{
+
+    $muebleReciclado1->anadirCaracteristicas("Perro", 3.51, "Juan", "5 añós", "Ultima", "Ultima");
+
+    echo $muebleReciclado1->getCaracteristicas();
+    
+    echo "<br><br>".PHP_EOL;
+
+    $muebleReciclado1->anadirCaracteristicas("Otra", 1);
+
+   
+
+    echo "<br><br>".PHP_EOL;
+    }catch(Exception $e){
+        echo  $e->getMessage() . PHP_EOL;
+    }
+
 }

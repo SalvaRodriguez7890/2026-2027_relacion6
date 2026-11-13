@@ -108,6 +108,10 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
         return $this->_precio;
     }
 
+    public function getCaracteristicasDinamicas(): array {
+        return $this->_caracteristicasDinamicas;
+    }
+
     /**
      * Set que se asegura que el nombre mida maximo 40
      *
@@ -350,9 +354,12 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
     }
 
     public function getCaracteristicas(): string {
+        $cadena = "";
+        foreach($this->_caracteristicasDinamicas as $key => $valor){
 
-
-        return $this->_caracteristicasDinamicas->__toString();
+            $cadena .= $key. " : " . $valor . " / ";
+        }
+        return $cadena;
     }
 
 }

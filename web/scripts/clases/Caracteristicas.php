@@ -89,7 +89,7 @@ class Caracteristicas implements IteratorAggregate {
    public function __toString(): string {
         $cadena = "";
         //Reccorro también también en orden inverso para que la cadena coincida con el foreach
-        foreach (array_reverse($this->caracteristicas, true) as $key => $valor) {
+        foreach ($this->caracteristicas as $key => $valor) {
             $cadena .= "{$key}:{$valor};";
         }
         
