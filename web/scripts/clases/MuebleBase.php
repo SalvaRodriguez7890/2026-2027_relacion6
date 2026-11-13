@@ -108,10 +108,7 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
         return $this->_precio;
     }
 
-    public function getCaracteristicasDinamicas(): array {
-        return $this->_caracteristicasDinamicas;
-    }
-
+    
     /**
      * Set que se asegura que el nombre mida maximo 40
      *

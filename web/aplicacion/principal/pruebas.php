@@ -9,7 +9,7 @@ $barraUbi = [
     ],
     [
         "TEXTO"=>"Pruebas Relacion 6",
-        "ENLACE" =>"/aplicacion/index.php"
+        "ENLACE" =>"/aplicacion/pruebas.php"
     ]
    
 ];

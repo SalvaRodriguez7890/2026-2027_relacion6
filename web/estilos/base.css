@@ -11,7 +11,7 @@ body {
 
 #documento {
     margin: 0 auto;
-    width: 700px;
+    width: 850px;
     background-color: #ffffff;
     padding: 24px;
     border-radius: 12px;
@@ -153,4 +153,48 @@ body {
 
 #mensajeError {
     color:red;
+}
+
+/* Estructura general de la tabla */
+#tablaMuebles {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-family: system-ui, -apple-system, sans-serif;
+    font-size: 0.9em;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+}
+
+/* Estilo para las cabeceras (th) */
+#tablaMuebles th {
+    background-color: #2b7a70;
+    color: #ffffff;
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    font-size: 0.95em;
+}
+
+/* Estilo específico para las celdas de datos (td) que insertas */
+#tablaMuebles td {
+    padding: 12px 14px;
+    color: #2d3748;
+    border-bottom: 1px solid #edf2f7;
+    vertical-align: middle;
+}
+
+/* Efecto cebra: filas pares con un tono gris muy suave (#f7fafc) */
+#tablaMuebles tbody tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+/* Efecto hover: resalta sutilmente la fila cuando el cursor pasa por encima */
+#tablaMuebles tbody tr:hover {
+    background-color: #edf2f7;
+    transition: background-color 0.15s ease;
 }
