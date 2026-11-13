@@ -71,7 +71,8 @@ function inicioCuerpo(string $cabecera, array $ubicacion = [])
              <nav id="navegacion">
                
                     <a href="index.php">RECARGAR-PAGINA</a>
-                    <a href="/aplicacion/index.php">Relacion 6</a>
+                    <a href="/aplicacion/principal/index.php">Index Relacion 6</a>
+                    <a href="/aplicacion/principal/pruebas.php">Pruebas Relacion 6</a>
                 
             </nav>
             <header>

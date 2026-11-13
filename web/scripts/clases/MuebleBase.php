@@ -15,6 +15,10 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
     private string $_fechaFinVenta = "31/12/2040";
     private float $_precio = 30;
 
+    //propiedad tipo Caracteristica
+
+    private Caracteristicas $_caracteristicasDinamicas;
+
     /** 
      * Constructor 
      */
@@ -54,6 +58,9 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
         if(!$this->setPrecio($precio)){
             $this->setPrecio(30);
         }
+
+        //inicializo la variable que guarda las caracteristicas
+        $this->_caracteristicasDinamicas = new Caracteristicas();
 
         //si todo va bien y el constructor crea el mueble sumo 1
         self::$_mueblesCreados +=1;
@@ -101,6 +108,7 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
         return $this->_precio;
     }
 
+    
     /**
      * Set que se asegura que el nombre mida maximo 40
      *
@@ -108,14 +116,15 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      * @return boolean
      */
     public function setNombre(string $nombre): bool {
-        $validoNombre = VALFINAL\validaCadena($nombre,40,"");
+
+
 
         //tras pasarle la validacion devolverá false si no cumple, osea mas de 40
-        if(!$validoNombre){
+        if(!VALFINAL\validaCadena($nombre,40,"")){
             return false;
         }
         //Lo paso a mayuscula
-        $nombreMayus = mb_strtoupper($validoNombre);
+        $nombreMayus = mb_strtoupper($nombre);
 
         //se lo asigno a nuestra propiedad nombre
         $this->_nombre = $nombreMayus;
@@ -281,7 +290,7 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      * clase y false en caso contrario. Además, devuelve en el parámetro Número el número de
      * muebles que aún se pueden crear de la clase.
      *
-     * @param [int] $numRestantes
+     * @param int $numRestantes
      * @return boolean
      */
     public static function puedeCrear(int &$numRestantes): bool {
@@ -303,10 +312,51 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      *
      * @return string
      */
-    public static function toString(MuebleBase $mueble): string{
+    public function toString(): string {
+        return "MUEBLE de " . get_class($this) . " con nombre " . $this->getNombre() . ", fabricante " . $this->getFabricante() . ", fabricado en " . $this->getPais() . 
+                ", a partir del año " . $this->getAnio() . " vendido desde " . $this->getFechaIniVenta() . " hasta " . $this->getFechaFinVenta() . ", precio " . number_format($this->getPrecio(), 2, '.', '') . "€";
+    }
 
-        return "MUEBLE de " . get_class($mueble) . " con nombre " . $mueble->getNombre() . ", fabricante " . $mueble->getFabricante() . ", fabricado en " . $mueble->getPais() . 
-                ", a partir del año " . $mueble->getAnio() . " vendido desde " . $mueble->getFechaIniVenta() . " hasta " . $mueble->getFechaFinVenta() . ", precio " . number_format($mueble->getPrecio(),2,'.','') . "€";
+
+    /**
+     * Método para meter características a nuestro objeto de caracterisitcas
+     *
+     * @param string $carac
+     * @param mixed $valor
+     * @param mixed ...$resto
+     * @return void
+     */
+    public function anadirCaracteristicas(string $carac, mixed $valor, mixed ...$resto): void {
+    
+
+        //Añado los dos primeros valores
+        $this->_caracteristicasDinamicas->__set($carac, $valor);
+
+        //Miro si he pasado mas de dos valores a la funcion
+        $totalResto = count($resto);
+        
+        //Si le he pasado un numero impar de elementos le borro el ultimo con array_pop al resto
+        if ($totalResto % 2 !== 0) {
+            array_pop($resto);
+            $totalResto = count($resto);
+        }
+
+        //Recorro el array de dos en dos para ir añadiendo las características
+        for ($i = 0; $i < $totalResto; $i += 2) {
+            $clave = $resto[$i];
+            $val = $resto[$i + 1];
+            
+            $this->_caracteristicasDinamicas->__set($clave, $val);
+        }
+    }
+
+    public function getCaracteristicas(): string {
+        $cadena = "";
+        foreach($this->_caracteristicasDinamicas as $key => $valor){
+
+            $cadena .= $key. " : " . $valor . " / ";
+        }
+        return $cadena;
     }
 
 }
