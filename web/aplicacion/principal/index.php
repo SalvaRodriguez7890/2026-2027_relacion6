@@ -79,6 +79,9 @@ function cuerpo(array $arrayMuebles, array $errores, $muebleSeleccionado, string
         <th>Fecha Inicio de Venta</th>
         <th>Fecha Fin de Venta</th>
         <th>Precio</th>
+        <th>Porcentaje Reciclado</th>
+        <th>Peso</th>
+        <th>Serie</th>
         <th>Caracteristica Adicionales</th>
     </tr>
 
@@ -86,15 +89,30 @@ function cuerpo(array $arrayMuebles, array $errores, $muebleSeleccionado, string
 <?php
 //Con un for recorro el array muebles
     for ($i = 0; $i < count($arrayMuebles); $i++){
-            echo "<tr>";
+    $reciclado = "Sin Datos";
+    $peso = "Sin Datos";
+    $serie = "Sin Datos";
+     if(method_exists($arrayMuebles[$i], "getPorcentajeReciclado")) {
+        $reciclado = $arrayMuebles[$i]->getPorcentajeReciclado() . "%";
+     }
+     if(method_exists($arrayMuebles[$i], "getPeso")){
+        $peso = $arrayMuebles[$i]->getPeso() . "kg";
+     }
+     if(method_exists($arrayMuebles[$i],"getSerie")){
+        $serie = $arrayMuebles[$i]->getSerie();
+     }
+                echo "<tr>";
                 echo "<td>" . ($i+1)."</td>";
-                echo "<td>" . $arrayMuebles[$i]->getNombre() . "</td>".PHP_EOL;
+                echo "<td>" . $arrayMuebles[$i]->getNombre() . "</>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFabricante() . "</td>".PHP_EOL; 
                 echo "<td>" . $arrayMuebles[$i]->getPais() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getAnio() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFechaIniVenta() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFechaFinVenta() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getPrecio() . " €</td>".PHP_EOL;
+                echo "<td>" . $reciclado . "</td>".PHP_EOL;
+                echo "<td>" . $peso . "</td>".PHP_EOL;
+                echo "<td>" . $serie . "</td>".PHP_EOL;               
                 echo "<td>" . $arrayMuebles[$i]->getCaracteristicas() . "</td>".PHP_EOL;
             echo "</tr>".PHP_EOL;
         }

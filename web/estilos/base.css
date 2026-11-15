@@ -11,7 +11,7 @@ body {
 
 #documento {
     margin: 0 auto;
-    width: 850px;
+    width: 1200px;
     background-color: #ffffff;
     padding: 24px;
     border-radius: 12px;
@@ -152,6 +152,10 @@ body {
 }
 
 #mensajeError {
+    color:red;
+}
+
+.mensajeError {
     color:red;
 }
 
