@@ -3,41 +3,64 @@ include_once(dirname(__FILE__) . "/../../cabecera.php");
 //controlador
 
 $barraUbi = [
-    [
-        "TEXTO"=>"Inicio",
-        "ENLACE" =>"/index.php"
-    ],
-    [
-        "TEXTO"=>"Index Relacion 6",
-        "ENLACE" =>"/aplicacion/index.php"
-    ]
-   
+    ["TEXTO" => "Inicio", "ENLACE" => "/index.php"],
+    ["TEXTO" => "Index Relacion 6", "ENLACE" => "/aplicacion/index.php"]
 ];
 
-//variable para los erroes
 $errores = [];
+$muebleSeleccionado = null;
+$accion = "";
 
+// ---- Logica para comprobar los datos ----
 
+//miramos si se pulsa el boton
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    //a la variable accion le asigno el boton que se pulsa
+    $accion = $_POST["accion"] ?? "";
 
-$usuario=getenv("MYSQL_USER");
+  //miro si a sido e boton de mostrar
+    if ($accion == "Mostrar" || $accion == "Modificar") {
+        //Compruebo que existe algo dentro del input datosIDmueble y si existe saea diferente de cadena vacia
+        if (isset($_POST["datosIDmueble"]) && $_POST["datosIDmueble"] !== "") {
+            //el id es lo que haya dentro del input y le resto 1 para que coincida con el index del array
+            $id = intval($_POST["datosIDmueble"]) - 1;
 
-//dibuja la plantilla de la vista
-inicioCabecera("APLICACION PRIMER TRIMESTRE");
-cabecera();
-finCabecera();
-inicioCuerpo("Pruebas Relación 6", $barraUbi);
-cuerpo($arrayMuebles, $errores);  //llamo a la vista
-finCuerpo();
-// **********************************************************
+            //Miro que esté entre 0 y 1, si no esta es porque es un erro al meter el id
+            if ($id < 0 || $id >= count($arrayMuebles)) {
+                $errores["ErrorId"] = "<p id='mensajeError'>ID INCORRECTO: El mueble seleccionado no existe.</p>";
+            } else {
+                //si el id es correcto pues le asigno a mueble seleccionado el mueble del array
+                $muebleSeleccionado = $arrayMuebles[$id];
+                //Creo otra varaibable para el id para enviar al formulario
+                $idRealParaEnviar = intval($_POST["datosIDmueble"]);
+            }
+        } else {
+            //si por lo que sea hay un error en el id, pues pongo un erro de que hay que introducir el numero (estaba vacio)
+            $errores["ErrorId"] = "<p id='mensajeError'>ID INCORRECTO: Debes introducir un número.</p>";
+        }
+    }
 
-//vista
-function cabecera() 
-{
+    // Si no hay errores y se pulso el botón Modificar, hacemos la redirección aquí arriba
+    if (count($errores) == 0 && $accion == "Modificar") {
+        header("Location: /aplicacion/principal/formulario.php?id=" . $idRealParaEnviar);
+        exit();
+    }
+
    
 }
 
-//vista
-function cuerpo(array $arrayMuebles, array $errores)
+// ---- DIBUJO DE LA PÁGINA ----
+inicioCabecera("APLICACION PRIMER TRIMESTRE");
+cabecera();
+finCabecera();
+inicioCuerpo("Index Relación 6", $barraUbi);
+cuerpo($arrayMuebles, $errores, $muebleSeleccionado, $accion);
+finCuerpo();
+
+// vista
+function cabecera() {}
+
+function cuerpo(array $arrayMuebles, array $errores, $muebleSeleccionado, string $accion)
 {
 ?>
 <!--Pruebas de muebles-->  
@@ -56,6 +79,9 @@ function cuerpo(array $arrayMuebles, array $errores)
         <th>Fecha Inicio de Venta</th>
         <th>Fecha Fin de Venta</th>
         <th>Precio</th>
+        <th>Porcentaje Reciclado</th>
+        <th>Peso</th>
+        <th>Serie</th>
         <th>Caracteristica Adicionales</th>
     </tr>
 
@@ -63,15 +89,30 @@ function cuerpo(array $arrayMuebles, array $errores)
 <?php
 //Con un for recorro el array muebles
     for ($i = 0; $i < count($arrayMuebles); $i++){
-            echo "<tr>";
+    $reciclado = "Sin Datos";
+    $peso = "Sin Datos";
+    $serie = "Sin Datos";
+     if(method_exists($arrayMuebles[$i], "getPorcentajeReciclado")) {
+        $reciclado = $arrayMuebles[$i]->getPorcentajeReciclado() . "%";
+     }
+     if(method_exists($arrayMuebles[$i], "getPeso")){
+        $peso = $arrayMuebles[$i]->getPeso() . "kg";
+     }
+     if(method_exists($arrayMuebles[$i],"getSerie")){
+        $serie = $arrayMuebles[$i]->getSerie();
+     }
+                echo "<tr>";
                 echo "<td>" . ($i+1)."</td>";
-                echo "<td>" . $arrayMuebles[$i]->getNombre() . "</td>".PHP_EOL;
+                echo "<td>" . $arrayMuebles[$i]->getNombre() . "</>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFabricante() . "</td>".PHP_EOL; 
                 echo "<td>" . $arrayMuebles[$i]->getPais() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getAnio() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFechaIniVenta() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFechaFinVenta() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getPrecio() . " €</td>".PHP_EOL;
+                echo "<td>" . $reciclado . "</td>".PHP_EOL;
+                echo "<td>" . $peso . "</td>".PHP_EOL;
+                echo "<td>" . $serie . "</td>".PHP_EOL;               
                 echo "<td>" . $arrayMuebles[$i]->getCaracteristicas() . "</td>".PHP_EOL;
             echo "</tr>".PHP_EOL;
         }
@@ -95,58 +136,29 @@ function cuerpo(array $arrayMuebles, array $errores)
       <hr>
       <br>
 <?php
+    //Muestro los resultados
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (count($errores) > 0) {//si el array errores tien algo lo muestro
+            echo "<h2>ERRORES ENCONTRADOS</h2>" . PHP_EOL;
+            foreach ($errores as $error) {
+                echo $error;
+            }
+        //si no existen erroes y accion es mostrar pues muestro los datos del mueble seleccionado
+        } elseif ($accion == "Mostrar") {
+            echo "<div>" . PHP_EOL;
+                echo "<h2>DATOS DEL MUEBLE ELEGIDO</h2>" . PHP_EOL;
+                
+                echo "<p><b>Nombre: </b> ". $muebleSeleccionado->getNombre()."</p><br>".PHP_EOL;
+                echo "<p><b>Fabricante: </b> ". $muebleSeleccionado->getFabricante()."</p><br>".PHP_EOL;
+                echo "<p><b>Pais: </b> ". $muebleSeleccionado->getPais()."</p><br>".PHP_EOL;
+                echo "<p><b>Año de Fabricación: </b> ". $muebleSeleccionado->getAnio()."</p><br>".PHP_EOL;
+                echo "<p><b>Fecha de Inicio de la venta: </b> ". $muebleSeleccionado->getFechaIniVenta()."</p><br>".PHP_EOL;
+                echo "<p><b>Fecha del Fin de la venta: </b> ". $muebleSeleccionado->getFechaFinVenta()."</p><br>".PHP_EOL;
+                echo "<p><b>Precio: </b> ". $muebleSeleccionado->getPrecio()."</p><br>".PHP_EOL;
+                echo "<p><b>Caracteristicas adicionales: </b> ". $muebleSeleccionado->getCaracteristicas()."</p><br>".PHP_EOL;
 
-//miramos se a pulsado el boton
-    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-    
-    // reincio el array de erroes cuando le doy al boton
-    $errores = [];
-
-    // Comprobamos que el campo no esté vacío
-    if (isset($_POST["datosIDmueble"]) && $_POST["datosIDmueble"] !== "") {
+            echo "</div>" . PHP_EOL;
+        }
         
-        // Saco el id que se ha pasado y le resto 1 para ajustarlo al índice del array
-        $id = intval($_POST["datosIDmueble"]) - 1; 
-
-        // Validamos dinámicamente si el índice existe en el array de muebles
-        if ($id < 0 || $id >= count($arrayMuebles)) {
-            $errores["ErrorId"] = "<p id='mensajeError'>ID INCORRECTO: El mueble seleccionado no existe.</p>";
-        } else {
-            // Si no hay error, inicializamos el mueble seleccionado
-            $muebleSeleccionado = $arrayMuebles[$id];
-        }
-
-    } else {
-        $errores["ErrorId"] = "<p id='mensajeError'>ID INCORRECTO: Debes introducir un número.</p>";
     }
-
-    if(count($errores)==0){
-        if($_POST["accion"] == "Mostrar"){
-            echo "<div>".PHP_EOL;
-            echo "<h2>DATOS DEL MUEBLE ELEGIDO</h2>".PHP_EOL;
-
-            echo "<p><b>Nombre: </b> ". $muebleSeleccionado->getNombre()."</p><br>".PHP_EOL;
-            echo "<p><b>Fabricante: </b> ". $muebleSeleccionado->getFabricante()."</p><br>".PHP_EOL;
-            echo "<p><b>Pais: </b> ". $muebleSeleccionado->getPais()."</p><br>".PHP_EOL;
-            echo "<p><b>Año de Fabricación: </b> ". $muebleSeleccionado->getAnio()."</p><br>".PHP_EOL;
-            echo "<p><b>Fecha de Inicio de la venta: </b> ". $muebleSeleccionado->getFechaIniVenta()."</p><br>".PHP_EOL;
-            echo "<p><b>Fecha del Fin de la venta: </b> ". $muebleSeleccionado->getFechaFinVenta()."</p><br>".PHP_EOL;
-            echo "<p><b>Precio: </b> ". $muebleSeleccionado->getPrecio()."</p><br>".PHP_EOL;
-            echo "<p><b>Caracteristicas adicionales: </b> ". $muebleSeleccionado->getCaracteristicas()."</p><br>".PHP_EOL;
-        }
-    }else{
-        echo "<h2>ERRORES ENCONTRADOS</h2>".PHP_EOL;
-
-        foreach ($errores as $error){
-
-            echo $error;
-
-        }
-    }
-}
-
-
-
-
-
 }

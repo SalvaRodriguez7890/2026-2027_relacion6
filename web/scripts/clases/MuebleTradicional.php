@@ -1,4 +1,3 @@
-
 <?php
 
 use function VALFINAL\validaReal;

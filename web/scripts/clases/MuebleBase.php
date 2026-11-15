@@ -1,4 +1,3 @@
-
 <?php
 include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
  abstract class MuebleBase {
