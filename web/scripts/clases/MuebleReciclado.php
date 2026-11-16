@@ -9,10 +9,10 @@ final class MuebleReciclado extends MuebleBase{
      */
     public function __construct(string $nombre, string $fabricante = "FaMu:", string $pais = "ESPAÑA", 
                                 int $anio = 2020, string $fechaIniVenta = "01/01/2020",  
-                                string $fechaFinVenta = "31/12/2040", float $precio = 30.0,
+                                string $fechaFinVenta = "31/12/2040", float $precio = 30.0, int $material=10,
                                 int $porcentajeReciclado = 10) {
         //LLamo al constructor padre para las variables que eredan
-        parent::__construct($nombre, $fabricante, $pais, $anio, $fechaIniVenta, $fechaFinVenta, $precio);
+        parent::__construct($nombre, $fabricante, $pais, $anio, $fechaIniVenta, $fechaFinVenta, $precio, $material);
 
         //inicializo el porcentaje, si no cumple la validación le meto 10
         if (!$this->setPorcentajeReciclado($porcentajeReciclado)) {

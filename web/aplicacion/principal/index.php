@@ -45,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: /aplicacion/principal/formulario.php?id=" . $idRealParaEnviar);
         exit();
     }
+    
 
    
 }
@@ -79,6 +80,7 @@ function cuerpo(array $arrayMuebles, array $errores, $muebleSeleccionado, string
         <th>Fecha Inicio de Venta</th>
         <th>Fecha Fin de Venta</th>
         <th>Precio</th>
+        <th>Material Usado </th>
         <th>Porcentaje Reciclado</th>
         <th>Peso</th>
         <th>Serie</th>
@@ -110,6 +112,7 @@ function cuerpo(array $arrayMuebles, array $errores, $muebleSeleccionado, string
                 echo "<td>" . $arrayMuebles[$i]->getFechaIniVenta() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getFechaFinVenta() . "</td>".PHP_EOL;
                 echo "<td>" . $arrayMuebles[$i]->getPrecio() . " €</td>".PHP_EOL;
+                echo "<td>" . $arrayMuebles[$i]->getMaterialDescripcion() . "</td>".PHP_EOL;
                 echo "<td>" . $reciclado . "</td>".PHP_EOL;
                 echo "<td>" . $peso . "</td>".PHP_EOL;
                 echo "<td>" . $serie . "</td>".PHP_EOL;               
@@ -155,6 +158,7 @@ function cuerpo(array $arrayMuebles, array $errores, $muebleSeleccionado, string
                 echo "<p><b>Fecha de Inicio de la venta: </b> ". $muebleSeleccionado->getFechaIniVenta()."</p><br>".PHP_EOL;
                 echo "<p><b>Fecha del Fin de la venta: </b> ". $muebleSeleccionado->getFechaFinVenta()."</p><br>".PHP_EOL;
                 echo "<p><b>Precio: </b> ". $muebleSeleccionado->getPrecio()."</p><br>".PHP_EOL;
+                echo "<p><b>Material: </b> ". $muebleSeleccionado->getMaterialDescripcion()."</p><br>".PHP_EOL;
                 echo "<p><b>Caracteristicas adicionales: </b> ". $muebleSeleccionado->getCaracteristicas()."</p><br>".PHP_EOL;
 
             echo "</div>" . PHP_EOL;

@@ -8,6 +8,7 @@ class Caracteristicas implements IteratorAggregate {
     //Variable para dejar añadir o no mas propiedades nuevas
     private bool $bloqueado = false;
 
+
     /**
      * Método mágico __set para crear y modficar las propiedads dinámicas
      */
@@ -28,6 +29,8 @@ class Caracteristicas implements IteratorAggregate {
         if ($nombreMayus === 'ULTIMA' || $valor === 'ULTIMA') {
             $this->bloqueado = true;
         }
+
+      
     }
 
     /**
