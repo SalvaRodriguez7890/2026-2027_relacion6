@@ -80,8 +80,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //comprueblo el material
         $materialNuevo = $_POST["material"] ?? "";
 
-        //valido con el auxiliar el nuevo material
-        if(!($auxiliar->setMaterial($materialNuevo))){
+        //valido el material por si acaso, p
+        if(!(\VALFINAL\validaEntero($materialNuevo, 0, 20,10)) || !($materialNuevo%5==0)){
             $errores["materialNuevo"] = "<p class='mensajeError'>Material incorrecto</p>";
         }
         
