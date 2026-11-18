@@ -14,6 +14,9 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
     private string $_fechaFinVenta = "31/12/2040";
     private float $_precio = 30;
 
+    //POR DEFECTO METO EL HIERRO QUE ES EL 10
+    private int $_material = 10;
+
     //propiedad tipo Caracteristica
 
     private Caracteristicas $_caracteristicasDinamicas;
@@ -22,7 +25,7 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      * Constructor 
      */
     public function __construct(string $nombre, string $fabricante = "FaMu:", string $pais = "ESPAÑA", 
-        int $anio = 2020, string $fechaIniVenta = "01/01/2020",  string $fechaFinVenta = "31/12/2040", float $precio = 30.0) {
+        int $anio = 2020, string $fechaIniVenta = "01/01/2020",  string $fechaFinVenta = "31/12/2040", float $precio = 30.0, int $material=10) {
    
         //incializo el nombre, pasandole lafuncion setNombre, si devuelve false genero una exception
         if (!$this->setNombre($nombre)) {
@@ -56,6 +59,10 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
         //Inicializo el precio que tiene que ser real y minimo 30
         if(!$this->setPrecio($precio)){
             $this->setPrecio(30);
+        }
+
+        if(!$this->setMaterial($material)){
+            $this->setMaterial(10);
         }
 
         //inicializo la variable que guarda las caracteristicas
@@ -105,6 +112,9 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
 
     public function getPrecio(): float {
         return $this->_precio;
+    }
+    public function getMaterial(): int {
+        return $this->_material;
     }
 
     
@@ -276,6 +286,31 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
     }
 
     /**
+     *  Set del material
+     *
+     * @param integer $material
+     * @return boolean
+     */
+    public function setMaterial(int $material): bool {
+    
+        // Valido que sea multiplo de 5, y debe estar entre 5 y 20 porque hay 4 (5,10,15,20)
+        //saco el numero de caasos y lo multiplico por 5 para saber el numero mayor
+      
+        //compruebo que sea multiplo de 5 y que numero sea inferior o igual al numero mayor del material
+        if(!VALFINAL\validaEntero($material, 0, 20, 10)){
+            return false;
+        }
+        //Miro que sea multiplo de 5 el numero pasado
+        if(!($material%5 == 0)){
+            return false;
+        }
+
+        //si la validacion devuelve true esta correcto
+        $this->_material =$material;
+        return true;
+    }
+
+    /**
      * Método damePropiedadesAdicionales. Será redefinido en las clases hijas y devolverá
      * un array con el nombre de las propiedades adicionales a la clase base
      *
@@ -313,9 +348,40 @@ include_once(dirname(__FILE__) . "/../../scripts/librerias/validacion.php");
      */
     public function toString(): string {
         return "MUEBLE de " . get_class($this) . " con nombre " . $this->getNombre() . ", fabricante " . $this->getFabricante() . ", fabricado en " . $this->getPais() . 
-                ", a partir del año " . $this->getAnio() . " vendido desde " . $this->getFechaIniVenta() . " hasta " . $this->getFechaFinVenta() . ", precio " . number_format($this->getPrecio(), 2, '.', '') . "€";
+                ", a partir del año " . $this->getAnio() . " vendido desde " . $this->getFechaIniVenta() . " hasta " . $this->getFechaFinVenta() . 
+                ", precio " . number_format($this->getPrecio(), 2, '.', '') . "€, de material de " .  $this->getMaterialDescripcion();
     }
 
+    /**
+     * Funcion que devuelve la cadena del amterial
+     *
+     * @return string
+     */
+    public function getMaterialDescripcion():string{
+        $buscaMaterial = "";
+
+        switch ($this->getMaterial()) {
+            case 5:
+                $buscaMaterial = "MADERA";
+                break;
+            case 10:
+                $buscaMaterial = "HIERRO";
+                break;
+            case 15:
+                $buscaMaterial = "ACERO";
+                break;
+            case 20:
+                $buscaMaterial = "PLASTICO";
+                break;
+            
+            
+            default:
+                $buscaMaterial = "material sin datos";
+                break;
+        }
+
+    return $buscaMaterial;
+    }
 
     /**
      * Método para meter características a nuestro objeto de caracterisitcas

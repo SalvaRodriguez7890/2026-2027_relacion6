@@ -76,6 +76,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!is_numeric($precio) || $precio < 0 ) {
             $errores["precio"] = "<p class='mensajeError'>Precio incorrecto.</p>";
         }
+
+        //comprueblo el material
+        $materialNuevo = $_POST["material"] ?? "";
+
+        //valido el material por si acaso, p
+        if(!(\VALFINAL\validaEntero($materialNuevo, 0, 20,10)) || !($materialNuevo%5==0)){
+            $errores["materialNuevo"] = "<p class='mensajeError'>Material incorrecto</p>";
+        }
+        
+
+
         //saco las fechas del formulario
         $fecIni = $_POST["fecIni"] ?? "";
         $fecFin = $_POST["fecVen"] ?? "";
@@ -117,6 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $muebleSeleccionado->setFechaIniVenta($_POST["fecIni"]);
             $muebleSeleccionado->setFechaFinVenta($_POST["fecVen"]);
             $muebleSeleccionado->setPrecio($_POST["precio"]);
+            $muebleSeleccionado->setMaterial($_POST["material"]);
 
             //si es reciclado
             if ($muebleSeleccionado instanceof MuebleReciclado) {
@@ -180,6 +192,7 @@ if (isset($errores["ErrorId"])) {
                 echo "<p><b>Fecha de Inicio de la venta: </b> ". $muebleSeleccionado->getFechaIniVenta()."</p><br>".PHP_EOL;
                 echo "<p><b>Fecha del Fin de la venta: </b> ". $muebleSeleccionado->getFechaFinVenta()."</p><br>".PHP_EOL;
                 echo "<p><b>Precio: </b> ". $muebleSeleccionado->getPrecio()."€</p><br>".PHP_EOL;
+                echo "<p><b>Material: </b> ". $muebleSeleccionado->getMaterialDescripcion()."</p><br>".PHP_EOL;
 
     if ($muebleSeleccionado instanceof MuebleReciclado){
               echo "<p><b>Porcentaje Reciclado: </b> ". $muebleSeleccionado->getPorcentajeReciclado()."%</p><br>".PHP_EOL;
@@ -233,6 +246,27 @@ if (isset($errores["ErrorId"])) {
         <br>
         <label>Precio</label>
         <input id="precio" type="text" name="precio" value="<?php echo htmlspecialchars((string)($_POST["precio"] ?? $muebleSeleccionado->getPrecio())); ?>">
+        <br>
+        <br>
+        
+        <label>Material</label>
+        <input id="materialActual" type="text" name="materialActual" value="<?php echo htmlspecialchars((string)($_POST["material"] ?? $muebleSeleccionado->getMaterialDescripcion())); ?>">
+        <br>
+        <br>
+        <label>ELECCION NUEVO MATERIAL</label>
+        <br>
+        <br>
+        <label>Madera</label>
+        <input id="madera" type="radio" name="material" value = "5">
+        <br>
+        <label>Hierro</label>
+        <input id="hierro" type="radio" name="material" value = "10">
+        <br>
+        <label>Acero</label>
+        <input id="acero" type="radio" name="material" value = "15">
+        <br>
+        <label>Plastico</label>
+        <input id="plastico" type="radio" name="material" value = "20">
         <br>
     <?php 
     if ($muebleSeleccionado instanceof MuebleReciclado) { 

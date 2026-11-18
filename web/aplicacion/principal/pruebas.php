@@ -52,7 +52,7 @@ function cuerpo()
 
 // echo $cadena;
 
-    $muebleReciclado1 = new MuebleReciclado("Silla de plástico", "No tiene", "China", 2023, 04/3/2023, 1/1/2032, 31, 70);
+    $muebleReciclado1 = new MuebleReciclado("Silla de plástico", "No tiene", "China", 2023, 04/3/2023, 1/1/2032, 31, 5, 70);
 
     echo $muebleReciclado1->toString().PHP_EOL;
 
@@ -63,9 +63,12 @@ function cuerpo()
     echo $propiedad."<br>".PHP_EOL;
 
     }
+
+ 
+
     echo "<br><hr><br>".PHP_EOL;
 
-    $muebleTradicional = new MuebleTradicional("Silla de madera Rústica", "Pedro el Carpintero" , "", 2021, 04/3/2022, 1/1/2042, 150, 16, "SERIE 5");
+    $muebleTradicional = new MuebleTradicional("Silla de madera Rústica", "Pedro el Carpintero" , "", 2021, 04/3/2022, 1/1/2042, 150, 15, 16.00, "SERIE 5");
 
     echo $muebleTradicional->toString().PHP_EOL;
 
@@ -82,6 +85,31 @@ function cuerpo()
     echo $muebleReciclado1->getCaracteristicas();
 
     echo "<br><br>".PHP_EOL;
+
+
+    $numSerie = "";
+    //creo un numero de serie, con un for que da 15 vueltas y saca numeros aleatorios entre 0 y 9
+    for($i = 0; $i<=15 ; $i++){
+            $numSerie .= rand(0,9);
+    }
+
+    echo "<b>CREACION Y MUESTRA DEL NUMERO DE SERIE</b>".PHP_EOL;
+    echo "<br>".PHP_EOL;
+    $muebleReciclado1->anadirCaracteristicas("numero_serie", $numSerie);
+
+    echo $muebleReciclado1->getCaracteristicas();
+
+    echo "<br><br>".PHP_EOL;
+        
+
+
+
+
+
+
+
+
+
     try{
 
     $muebleReciclado1->anadirCaracteristicas("Perro", 3.51, "Juan", "5 añós", "Ultima", "Ultima");
